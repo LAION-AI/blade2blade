@@ -1,6 +1,7 @@
 # Blade2Blade
-Evil Sharpens Good
+Evil Sharpens Good.
 
+Developed By: The LAION-AI Safety Team
 
 ### What is Blade2Blade?
 
