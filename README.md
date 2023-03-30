@@ -16,4 +16,4 @@ Both red teams and blue teams strive to increase security in a system, but they 
 
 ### What is the final goal of Blade2Blade?
 
-We want to make an easy to use package that will add automated redteaming and blueteaming to any existing training loop. By bringing down the requirements for redteaming and blueteaming we hope that companies and individuals will strive to include this in their systems and create safer LLMs. 
+We want to make an easy to use package that will add automated redteaming and blueteaming to any existing training loop. By bringing down the requirements for redteaming and blueteaming we hope that companies and individuals will strive to include this in their systems and create safer LLMs.
