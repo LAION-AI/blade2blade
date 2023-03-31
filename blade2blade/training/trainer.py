@@ -15,16 +15,15 @@ def train(cfg: DictConfig) -> None:
         os.mkdir(cfg.save_folder)
 
     model = get_model(cfg.model)
-    tokenizer = get_tokenizer(cfg.model)
+    tokenizer = get_tokenizer(cfg)
 
     training_args = instantiate(cfg.trainer)
 
-    dataset = load_dataset(cfg.dataset.name)
     train_dataset = ProSocialDataset(
-        dataset, split=OmegaConf.to_object(cfg.dataset.train), tokenizer=tokenizer
+        cfg.dataset.name, split=OmegaConf.to_object(cfg.dataset.train), tokenizer=tokenizer
     )
     validation_dataset = ProSocialDataset(
-        dataset, split=OmegaConf.to_object(cfg.dataset.validation), tokenizer=tokenizer
+        cfg.dataset.name, split=OmegaConf.to_object(cfg.dataset.validation), tokenizer=tokenizer
     )
     datacollator = ProSocialCollator(tokenizer=tokenizer, padding="max_length",
                                        max_length=cfg.max_length)
