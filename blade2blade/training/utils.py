@@ -33,9 +33,8 @@ def get_tokenizer(config):
     return tokenizer
 
 
-def get_model(config):
+def get_model(name):
     
-    name = config.model
     model_config = AutoConfig.from_pretrained(name)
     for mapping in MODEL_MAPPINGS:
         model = mapping.get(type(model_config),None)
