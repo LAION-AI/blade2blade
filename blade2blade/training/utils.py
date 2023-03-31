@@ -1,4 +1,7 @@
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, AutoConfig
+from transformers.models.auto.modeling_auto import MODEL_FOR_CAUSAL_LM_MAPPING,MODEL_FOR_SEQ_TO_SEQ_CAUSAL_LM_MAPPING
+
+MODEL_MAPPINGS = [MODEL_FOR_CAUSAL_LM_MAPPING, MODEL_FOR_SEQ_TO_SEQ_CAUSAL_LM_MAPPING]
 
 SPECIAL_TOKENS = {
     "context":"<|prompter|>",
@@ -28,3 +31,13 @@ def get_tokenizer(config):
     tokenizer.truncation_side = "left"
 
     return tokenizer
+
+
+def get_model(name):
+    
+    model_config = AutoConfig.from_pretrained(name)
+    for mapping in MODEL_MAPPINGS:
+        model = mapping.get(type(model_config),None)
+        if model is not None:
+            return model.from_pretrained(name,config=model_config)
+        
