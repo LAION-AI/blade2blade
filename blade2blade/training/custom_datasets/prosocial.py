@@ -4,7 +4,8 @@ from datasets import load_dataset, concatenate_datasets
 from typing import Union,List, Optional
 import itertools
 from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
-from training.custom_datasets.utils import format_history
+from training.utils import format_history
+from transformers import AutoModelForSeq2SeqLM
 
 
 
