@@ -5,7 +5,6 @@ from typing import Union,List, Optional
 import itertools
 from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
 from training.utils import format_history
-from transformers import AutoModelForSeq2SeqLM
 
 
 
@@ -69,7 +68,7 @@ class ProSocialCollator:
     def __call__(self, examples):
         
 
-        inputs = self.tokenizer([example[0] for example in examples],
+        input = self.tokenizer([example[0] for example in examples],
                         max_length=self.max_length,
                         padding=self.padding,
                         pad_to_multiple_of = self.pad_to_multiple_of,
@@ -77,9 +76,21 @@ class ProSocialCollator:
                         truncation = self.truncation,
                         return_tensors="pt")
         
-        output = self.tokenizer([example[1] for example in examples], add_special_tokens=False)
+        output = self.tokenizer([example[1] for example in examples],
+                                max_length=self.max_length,
+                                padding=self.padding,
+                                add_special_tokens=False,
+                                truncation = self.truncation,
+                                pad_to_multiple_of = self.pad_to_multiple_of,
+                                return_tensors="pt")
 
-        return {"input":inputs,"output":output}
+        output = {
+            "input_ids":input["input_ids"],
+            "attention_mask":input["attention_mask"],
+            "labels": output["input_ids"],
+            "decoder_attention_mask": output["attention_mask"],
+        }
+        return output
 
 
 
