@@ -1,0 +1,18 @@
+defaults:
+  - trainer: default
+padding_side: "right"
+truncation_side: "right"
+model: "t5-base"
+epochs: 1
+batch_size: 8
+save_folder: "safetyfiles"
+max_length: 256
+per_digit_tokens: False
+special_tokens:
+  eos_token: "</s>"
+  sep_token: "</sep>"
+  pad_token: "</pad>"
+dataset:
+  name: "allenai/prosocial-dialog"
+  train: ["train", "validation"]
+  test: "test"
