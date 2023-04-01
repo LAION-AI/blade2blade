@@ -83,6 +83,7 @@ class ProSocialCollator:
                                 truncation = self.truncation,
                                 pad_to_multiple_of = self.pad_to_multiple_of,
                                 return_tensors="pt")
+        output['input_ids'][output['input_ids']==0] = -100
 
         output = {
             "input_ids":input["input_ids"],
