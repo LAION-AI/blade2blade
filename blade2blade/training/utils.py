@@ -1,5 +1,6 @@
 from transformers import AutoTokenizer, AutoConfig
 from transformers.models.auto.modeling_auto import MODEL_FOR_CAUSAL_LM_MAPPING,MODEL_FOR_SEQ_TO_SEQ_CAUSAL_LM_MAPPING
+from tokenizers import pre_tokenizers
 
 MODEL_MAPPINGS = [MODEL_FOR_CAUSAL_LM_MAPPING, MODEL_FOR_SEQ_TO_SEQ_CAUSAL_LM_MAPPING]
 
@@ -19,6 +20,9 @@ def get_tokenizer(config):
 
     tokenizer = AutoTokenizer.from_pretrained(config.model)
     
+    if hasattr(config, "per_digit_tokens") and config.per_digit_tokens:
+        tokenizer._tokenizer.pre_processor = pre_tokenizers.Digits(True)
+
     if config.special_tokens:
         special_tokens = {
             "pad_token":config.special_tokens.pad_token,
