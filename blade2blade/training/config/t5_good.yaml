@@ -5,13 +5,15 @@ truncation_side: "right"
 model: "t5-small"
 epochs: 1
 batch_size: 8
-save_folder: "safetyfiles"
+log_dir: "safetyfiles"
+log_wandb: false
+wandb_entity: "shahules786"
 max_length: 512
 per_digit_tokens: False
 special_tokens:
   eos_token: "</s>"
-  sep_token: "</sep>"
-  pad_token: "</pad>"
+  sep_token: "<sep>"
+  pad_token: "<pad>"
 dataset:
   name: "allenai/prosocial-dialog"
   train: ["train", "validation"]
