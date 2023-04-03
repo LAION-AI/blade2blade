@@ -5,7 +5,17 @@ from typing import Union,List, Optional
 import itertools
 from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
 from training.utils import format_history
+from datasets.dataset_dict import DatasetDict
 
+
+def filter_by_confidence(dataset:DatasetDict, confidence:float):
+
+    column_names = dataset.column_names if isinstance(dataset.column_names, List) else list(dataset.column_names.values())[0]
+    if "confidence" in column_names:
+        return dataset.filter(lambda example : example["confidence"] >= confidence )    
+    else:
+        return dataset
+    
 
 
 class ProSocialDataset(Dataset):
@@ -14,11 +24,14 @@ class ProSocialDataset(Dataset):
     """
 
     def __init__(self,path:str, tokenizer:PreTrainedTokenizerBase, 
-                 split:Union[List[str],str]="train",):
+                 split:Union[List[str],str]="train",**kwargs):
 
         super().__init__()
         
         dataset = load_dataset(path)
+        if kwargs.get("confidence"):
+             dataset = filter_by_confidence(dataset, kwargs.get("confidence"))
+
         if isinstance(split, List):
             self.split = "-".join(split)
             self.dataset = concatenate_datasets([dataset[sp] for sp in split])
