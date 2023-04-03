@@ -4,7 +4,7 @@ from datasets import load_dataset, concatenate_datasets
 from typing import Union,List, Optional
 import itertools
 from transformers.tokenization_utils_base import PaddingStrategy, PreTrainedTokenizerBase
-from training.utils import format_history
+from blade2blade.training.utils import format_history
 from datasets.dataset_dict import DatasetDict
 
 
