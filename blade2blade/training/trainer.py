@@ -24,7 +24,7 @@ def train(cfg: DictConfig) -> None:
         wandb.init(
             project="blade2blade",
             entity=cfg.wandb_entity,
-            name=f"{cfg.model_name}-{cfg.log_dir}-rm",
+            name=f"{cfg.model}-{cfg.log_dir}-rm",
             config=cfg,
         )
 
