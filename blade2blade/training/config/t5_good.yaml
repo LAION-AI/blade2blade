@@ -12,7 +12,11 @@ special_tokens:
   eos_token: "</s>"
   sep_token: "<sep>"
   pad_token: "<pad>"
-dataset:
-  name: "allenai/prosocial-dialog"
-  train: ["train", "validation"]
-  validation: ["test"]
+train_dataset:
+  name: ["allenai/prosocial-dialog","shahules786/prosocial-confessions"]
+  splits: [["train", "validation"],["train"]]
+  confidence: 0.8
+test_dataset:
+  name: ["allenai/prosocial-dialog"]
+  splits: [["test"]]
+  confidence:
