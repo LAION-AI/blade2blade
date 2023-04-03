@@ -3,27 +3,20 @@ defaults:
 padding_side: "right"
 truncation_side: "right"
 model: "t5-small"
-epochs: 1
-batch_size: 8
-<<<<<<< HEAD
 log_dir: "safetyfiles"
 log_wandb: false
 wandb_entity: "shahules786"
-=======
-save_folder: "safetyfiles"
->>>>>>> main
 max_length: 512
 per_digit_tokens: False
 special_tokens:
   eos_token: "</s>"
-<<<<<<< HEAD
   sep_token: "<sep>"
   pad_token: "<pad>"
-=======
-  sep_token: "</sep>"
-  pad_token: "</pad>"
->>>>>>> main
-dataset:
-  name: "allenai/prosocial-dialog"
-  train: ["train", "validation"]
-  validation: ["test"]
+train_dataset:
+  name: ["allenai/prosocial-dialog","shahules786/prosocial-confessions"]
+  splits: [["train", "validation"],["train"]]
+  confidence: 0.8
+test_dataset:
+  name: ["allenai/prosocial-dialog"]
+  splits: [["test"]]
+  confidence:
