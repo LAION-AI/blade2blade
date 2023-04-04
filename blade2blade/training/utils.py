@@ -18,7 +18,8 @@ def format_history(context, eos_token):
 
 def get_tokenizer(config):
 
-    tokenizer = AutoTokenizer.from_pretrained(config.model)
+    tokenizer = AutoTokenizer.from_pretrained(config.model,
+                                              truncation_side="left")
     
     if hasattr(config, "per_digit_tokens") and config.per_digit_tokens:
         tokenizer._tokenizer.pre_processor = pre_tokenizers.Digits(True)
