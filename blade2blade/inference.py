@@ -17,9 +17,20 @@ class SafetyPipeline(ConversationalPipeline):
                 f"Conversation with UUID {type(conversation.uuid)} does not contain new user input to process. "
                 "Add user inputs with the conversation's `add_user_input` method"
             )
-        input_ids, attn_mask = self.tokenizer._build_conversation_input_ids(
-            conversation
-        )
+        inputs = []
+        for is_user, text in conversation.iter_texts():
+            if is_user:
+                # We need to space prefix as it's being done within blenderbot
+                inputs.append("<|prompter|>" + text + self.tokenizer.eos)
+            else:
+                # Generated responses should contain them already.
+                inputs.append("<|Assistant|>" + text + self.tokenizer.eos)
+        
+        input_ids, attn_mask = self.tokenizer(
+            conversation,
+            padding="max_length",
+            truncation=True,
+        ).values()
 
         input_ids = torch.tensor([input_ids])
         attn_mask = torch.tensor([attn_mask])
@@ -50,10 +61,7 @@ class Blade2Blade:
     ):
         
         self.model = get_model(model)
-        self.tokenizer = AutoTokenizer.from_pretrained(model,
-                                                       truncation_side="left",
-                                                       model_max_length=kwargs.get("max_length",512),
-                                                       )
+        self.tokenizer = AutoTokenizer.from_pretrained(model)
         
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         self.pipeline = SafetyPipeline(self.model,self.tokenizer,self.device)
