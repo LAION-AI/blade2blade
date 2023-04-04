@@ -24,7 +24,7 @@ def train(cfg: DictConfig) -> None:
         wandb.init(
             project="blade2blade",
             entity=cfg.wandb_entity,
-            name=f"{cfg.model_name}-{cfg.log_dir}-rm",
+            name=f"{cfg.model}-{cfg.log_dir}-rm",
             config=cfg,
         )
 
@@ -52,6 +52,7 @@ def train(cfg: DictConfig) -> None:
     trainer.train()
 
     trainer.save_model(os.path.join(cfg.log_dir, f"{cfg.model_name}-model"))
+    tokenizer.save_pretrained(cfg.log_dir)
 
 
 if __name__ == "__main__":
