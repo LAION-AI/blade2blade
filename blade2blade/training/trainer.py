@@ -51,7 +51,7 @@ def train(cfg: DictConfig) -> None:
     # training
     trainer.train()
 
-    trainer.save_model(os.path.join(cfg.log_dir, f"{cfg.model_name}-model"))
+    trainer.save_model(os.path.join(cfg.log_dir, f"{cfg.model_name.split('/')[-1]}-model"))
     tokenizer.save_pretrained(cfg.log_dir)
 
 
