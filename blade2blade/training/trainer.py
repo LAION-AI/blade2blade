@@ -36,7 +36,10 @@ def train(cfg: DictConfig) -> None:
     train_dataset = get_dataset(cfg.train_dataset, tokenizer)
     validation_dataset = get_dataset(cfg.test_dataset, tokenizer)
     datacollator = ProSocialCollator(
-        tokenizer=tokenizer, padding="max_length", max_length=cfg.max_length
+        tokenizer=tokenizer,
+        padding="max_length",
+        max_length=cfg.max_length,
+        evil=cfg.evil,
     )
 
     # Initialize our Trainer

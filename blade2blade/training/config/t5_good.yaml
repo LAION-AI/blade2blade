@@ -1,6 +1,7 @@
 defaults:
   - trainer: default
 padding_side: "right"
+evil: false
 truncation_side: "right"
 model: "t5-small"
 log_dir: "safetyfiles"
