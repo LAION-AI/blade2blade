@@ -90,6 +90,7 @@ class ProSocialDataset(Dataset):
 class ProSocialCollator:
 
     tokenizer: PreTrainedTokenizerBase
+    evil: bool = False
     padding: Union[bool, str, PaddingStrategy] = True
     max_length: Optional[int] = None
     pad_to_multiple_of: Optional[int] = None
@@ -116,12 +117,22 @@ class ProSocialCollator:
             pad_to_multiple_of=self.pad_to_multiple_of,
             return_tensors="pt",
         )
-        output["input_ids"][output["input_ids"] == 0] = -100
 
-        output = {
-            "input_ids": input["input_ids"],
-            "attention_mask": input["attention_mask"],
-            "labels": output["input_ids"],
-            "decoder_attention_mask": output["attention_mask"],
-        }
+        if not self.evil:
+            output["input_ids"][output["input_ids"] == 0] = -100
+            output = {
+                "input_ids": input["input_ids"],
+                "attention_mask": input["attention_mask"],
+                "labels": output["input_ids"],
+                "decoder_attention_mask": output["attention_mask"],
+            }
+        else:
+            input["input_ids"][input["input_ids"] == 0] = -100
+            output = {
+                "input_ids": output["input_ids"],
+                "attention_mask": output["attention_mask"],
+                "labels": input["input_ids"],
+                "decoder_attention_mask": input["attention_mask"],
+            }
+
         return output
