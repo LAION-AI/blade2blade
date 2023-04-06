@@ -33,7 +33,6 @@ class SafetyPipeline(ConversationalPipeline):
 
         input_ids = torch.tensor([input_ids])
         attn_mask = torch.tensor([attn_mask])
-        print(input_ids.shape)
         return {
             "input_ids": input_ids,
             "attention_mask": attn_mask,
