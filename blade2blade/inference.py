@@ -52,14 +52,17 @@ class SafetyPipeline(ConversationalPipeline):
 class Blade2Blade:
     def __init__(self, model_name, **kwargs):
 
-        model = get_model(model_name)
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model.config.max_length = tokenizer.model_max_length
+        self.model = get_model(model_name)
+        self.model.eval()
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model.config.max_length = self.tokenizer.model_max_length
         self.device = (
             torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         )
+        self.model.to(self.device)
+
         self.pipeline = SafetyPipeline(
-            model, tokenizer, self.device, minimum_tokens=0, **kwargs
+            self.model, self.tokenizer, self.device, minimum_tokens=0, **kwargs
         )
 
     def __call__(self, prompt: str, conversation=None):
@@ -71,3 +74,18 @@ class Blade2Blade:
         conversation.add_user_input(prompt)
         resp = self.pipeline(conversation)
         return resp, conversation
+
+    def predict(self, prompt: str, **kwargs):
+
+        inputs = self.tokenizer(
+            prompt,
+            padding="max_length",
+            truncation=True,
+            return_tensors="pt",
+        )
+
+        output = self.model.generate(**inputs, **kwargs).detach().cpu().numpy()[0]
+        output = self.tokenizer.convert_tokens_to_string(
+            self.tokenizer.convert_ids_to_tokens(output)
+        )
+        return output
