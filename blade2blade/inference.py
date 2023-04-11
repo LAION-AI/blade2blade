@@ -1,7 +1,9 @@
-from transformers import AutoTokenizer
+from typing import Any, Dict
+
 import torch
-from typing import Dict, Any
-from transformers.pipelines import ConversationalPipeline, Conversation
+from transformers import AutoTokenizer
+from transformers.pipelines import Conversation, ConversationalPipeline
+
 from blade2blade.training.utils import get_model
 
 
@@ -51,7 +53,6 @@ class SafetyPipeline(ConversationalPipeline):
 
 class Blade2Blade:
     def __init__(self, model_name, **kwargs):
-
         self.model = get_model(model_name)
         self.model.eval()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -66,7 +67,6 @@ class Blade2Blade:
         )
 
     def __call__(self, prompt: str, conversation=None):
-
         if not conversation:
             conversation = Conversation(prompt)
             resp = self.pipeline(conversation)
@@ -76,7 +76,6 @@ class Blade2Blade:
         return resp, conversation
 
     def predict(self, prompt: str, **kwargs):
-
         inputs = self.tokenizer(
             prompt,
             padding="max_length",

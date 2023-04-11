@@ -1,23 +1,19 @@
-from attr import dataclass
-from torch.utils.data import Dataset
-from datasets import load_dataset, concatenate_datasets
-from typing import Union, List, Optional
 import itertools
-from transformers.tokenization_utils_base import (
-    PaddingStrategy,
-    PreTrainedTokenizerBase,
-)
-from blade2blade.training.utils import format_history
-from transformers.tokenization_utils_base import (
-    PaddingStrategy,
-    PreTrainedTokenizerBase,
-)
-from blade2blade.training.utils import format_history
+from typing import List, Optional, Union
+
+from attr import dataclass
+from datasets import concatenate_datasets, load_dataset
 from datasets.dataset_dict import DatasetDict
+from torch.utils.data import Dataset
+from transformers.tokenization_utils_base import (
+    PaddingStrategy,
+    PreTrainedTokenizerBase,
+)
+
+from blade2blade.training.utils import format_history
 
 
 def filter_by_confidence(dataset: DatasetDict, confidence: float):
-
     column_names = (
         dataset.column_names
         if isinstance(dataset.column_names, List)
@@ -41,7 +37,6 @@ class ProSocialDataset(Dataset):
         split: Union[List[str], str] = "train",
         **kwargs
     ):
-
         super().__init__()
 
         dataset = load_dataset(path)
@@ -61,7 +56,6 @@ class ProSocialDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-
         idx_start = idx
         end = self.dataset[max(0, idx_start - 1)]["episode_done"]
         while (not end) and (idx_start > 0):
@@ -88,7 +82,6 @@ class ProSocialDataset(Dataset):
 
 @dataclass
 class ProSocialCollator:
-
     tokenizer: PreTrainedTokenizerBase
     evil: bool = False
     padding: Union[bool, str, PaddingStrategy] = True
@@ -97,7 +90,6 @@ class ProSocialCollator:
     truncation: Optional[bool] = True
 
     def __call__(self, examples):
-
         input = self.tokenizer(
             [example[0] for example in examples],
             max_length=self.max_length,
