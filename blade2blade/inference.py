@@ -53,7 +53,6 @@ class SafetyPipeline(ConversationalPipeline):
 
 class Blade2Blade:
     def __init__(self, model_name, **kwargs):
-
         self.model = get_model(model_name)
         self.model.eval()
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
@@ -68,7 +67,6 @@ class Blade2Blade:
         )
 
     def __call__(self, prompt: str, conversation=None):
-
         if not conversation:
             conversation = Conversation(prompt)
             resp = self.pipeline(conversation)
@@ -78,7 +76,6 @@ class Blade2Blade:
         return resp, conversation
 
     def predict(self, prompt: str, **kwargs):
-
         inputs = self.tokenizer(
             prompt,
             padding="max_length",
