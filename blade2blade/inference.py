@@ -23,7 +23,7 @@ class SafetyPipeline(ConversationalPipeline):
                 inputs.append("<|prompter|>" + text + self.tokenizer.eos_token)
             else:
                 # Generated responses should contain them already.
-                inputs.append("<|Assistant|>" + text + self.tokenizer.eos_token)
+                inputs.append("<|assistant|>" + text + self.tokenizer.eos_token)
 
         input_ids, attn_mask = self.tokenizer(
             "".join(inputs),
