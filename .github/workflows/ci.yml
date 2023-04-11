@@ -20,8 +20,6 @@ jobs:
       uses: actions/setup-python@v3
       env :
         ACTIONS_ALLOW_UNSECURE_COMMANDS : true
-      with:
-        python-version: ${{ matrix.python-version }}
     - name: Cache pip
       uses: actions/cache@v1
       with:
