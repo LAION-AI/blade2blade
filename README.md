@@ -1,4 +1,8 @@
 # Blade2Blade
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/LAION-AI/blade2blade/ci.yml?branch=main)
+![GitHub](https://img.shields.io/github/license/LAION-AI/blade2blade)
+![GitHub Repo stars](https://img.shields.io/github/stars/LAION-AI/blade2blade?style=social)
+
 ***Evil Sharpens Good.***
 
 Developed By: The LAION-AI Safety Team
