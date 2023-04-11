@@ -14,7 +14,6 @@ from blade2blade.training.utils import format_history
 
 
 def filter_by_confidence(dataset: DatasetDict, confidence: float):
-
     column_names = (
         dataset.column_names
         if isinstance(dataset.column_names, List)
@@ -38,7 +37,6 @@ class ProSocialDataset(Dataset):
         split: Union[List[str], str] = "train",
         **kwargs
     ):
-
         super().__init__()
 
         dataset = load_dataset(path)
@@ -58,7 +56,6 @@ class ProSocialDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, idx):
-
         idx_start = idx
         end = self.dataset[max(0, idx_start - 1)]["episode_done"]
         while (not end) and (idx_start > 0):
@@ -85,7 +82,6 @@ class ProSocialDataset(Dataset):
 
 @dataclass
 class ProSocialCollator:
-
     tokenizer: PreTrainedTokenizerBase
     evil: bool = False
     padding: Union[bool, str, PaddingStrategy] = True
@@ -94,7 +90,6 @@ class ProSocialCollator:
     truncation: Optional[bool] = True
 
     def __call__(self, examples):
-
         input = self.tokenizer(
             [example[0] for example in examples],
             max_length=self.max_length,

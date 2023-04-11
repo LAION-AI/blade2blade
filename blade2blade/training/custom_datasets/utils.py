@@ -7,7 +7,6 @@ from blade2blade.training.custom_datasets.prosocial import ProSocialDataset
 
 
 def convert_to_list(item):
-
     if not isinstance(item, List):
         item = [item]
 
@@ -15,7 +14,6 @@ def convert_to_list(item):
 
 
 def get_dataset(config, tokenizer):
-
     dataset_names = OmegaConf.to_object(config.name)
     dataset_names = convert_to_list(dataset_names)
     splits = OmegaConf.to_object(config.splits)
