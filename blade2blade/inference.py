@@ -1,7 +1,9 @@
-from transformers import AutoTokenizer
+from typing import Any, Dict
+
 import torch
-from typing import Dict, Any
-from transformers.pipelines import ConversationalPipeline, Conversation
+from transformers import AutoTokenizer
+from transformers.pipelines import Conversation, ConversationalPipeline
+
 from blade2blade.training.utils import get_model
 
 

@@ -1,19 +1,16 @@
-from attr import dataclass
-from torch.utils.data import Dataset
-from datasets import load_dataset, concatenate_datasets
-from typing import Union, List, Optional
 import itertools
-from transformers.tokenization_utils_base import (
-    PaddingStrategy,
-    PreTrainedTokenizerBase,
-)
-from blade2blade.training.utils import format_history
-from transformers.tokenization_utils_base import (
-    PaddingStrategy,
-    PreTrainedTokenizerBase,
-)
-from blade2blade.training.utils import format_history
+from typing import List, Optional, Union
+
+from attr import dataclass
+from datasets import concatenate_datasets, load_dataset
 from datasets.dataset_dict import DatasetDict
+from torch.utils.data import Dataset
+from transformers.tokenization_utils_base import (
+    PaddingStrategy,
+    PreTrainedTokenizerBase,
+)
+
+from blade2blade.training.utils import format_history
 
 
 def filter_by_confidence(dataset: DatasetDict, confidence: float):

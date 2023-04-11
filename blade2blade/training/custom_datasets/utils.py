@@ -1,6 +1,7 @@
 from typing import List
-from omegaconf import OmegaConf
+
 import torch
+from omegaconf import OmegaConf
 
 from blade2blade.training.custom_datasets.prosocial import ProSocialDataset
 

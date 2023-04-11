@@ -1,9 +1,9 @@
-from transformers import AutoTokenizer, AutoConfig
+from tokenizers import pre_tokenizers
+from transformers import AutoConfig, AutoTokenizer
 from transformers.models.auto.modeling_auto import (
     MODEL_FOR_CAUSAL_LM_MAPPING,
     MODEL_FOR_SEQ_TO_SEQ_CAUSAL_LM_MAPPING,
 )
-from tokenizers import pre_tokenizers
 
 MODEL_MAPPINGS = [MODEL_FOR_CAUSAL_LM_MAPPING, MODEL_FOR_SEQ_TO_SEQ_CAUSAL_LM_MAPPING]
 
