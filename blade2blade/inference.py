@@ -27,14 +27,17 @@ class SafetyPipeline(ConversationalPipeline):
                 # Generated responses should contain them already.
                 inputs.append("<|assistant|>" + text + self.tokenizer.eos_token)
 
-        input_ids, attn_mask = self.tokenizer(
-            "".join(inputs),
-            padding="max_length",
-            truncation=True,
-        ).values()
+        input_ids, attn_mask = (
+            self.tokenizer(
+                "".join(inputs),
+                padding="max_length",
+                truncation=True,
+                return_tensors="pt",
+            )
+            .to(self.device)
+            .values()
+        )
 
-        input_ids = torch.tensor([input_ids])
-        attn_mask = torch.tensor([attn_mask])
         return {
             "input_ids": input_ids,
             "attention_mask": attn_mask,
@@ -81,7 +84,7 @@ class Blade2Blade:
             padding="max_length",
             truncation=True,
             return_tensors="pt",
-        )
+        ).to(self.device)
 
         output = self.model.generate(**inputs, **kwargs).detach().cpu().numpy()[0]
         output = self.tokenizer.convert_tokens_to_string(
