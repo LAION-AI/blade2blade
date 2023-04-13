@@ -5,6 +5,7 @@ version = "0.0.1"
 authors = [
     { name = "LAION-AI", email = "contact@laion.ai" }
 ]
+readme = "README.md"
 dependencies = [
     "datasets>=2.11.0",
     "torch>=2.0.0",
