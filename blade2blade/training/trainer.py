@@ -18,7 +18,6 @@ class BladeTrainer(Trainer):
         super().__init__(**kwargs)
 
     def compute_loss(self, model, inputs, return_outputs=False):
-
         if not model.config.is_encoder_decoder:
             _ = inputs.pop("decoder_attention_mask")
 
