@@ -2,12 +2,25 @@ import os
 
 import hydra
 from hydra.utils import instantiate
-from omegaconf import DictConfig, OmegaConf
+from omegaconf import DictConfig
 from blade2blade.training.utils import get_model, get_tokenizer
 from blade2blade.training.custom_datasets.utils import get_dataset
 from blade2blade.training.custom_datasets.prosocial import ProSocialCollator
 from transformers import Trainer
 
+
+class BladeTrainer(Trainer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def compute_loss(self, model, inputs, return_outputs=False):
+
+        if not model.config.is_encoder_decoder:
+            _ = inputs.pop("decoder_attention_mask")
+
+        outputs = model(**inputs)
+        loss = outputs.get("loss")
+        return (loss, outputs) if return_outputs else loss
 
 @hydra.main(version_base=None, config_path="config", config_name="config")
 def train(cfg: DictConfig) -> None:
@@ -43,7 +56,7 @@ def train(cfg: DictConfig) -> None:
     )
 
     # Initialize our Trainer
-    trainer = Trainer(
+    trainer = BladeTrainer(
         model=model,
         args=training_args,
         train_dataset=train_dataset,
