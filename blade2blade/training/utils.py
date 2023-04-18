@@ -1,17 +1,16 @@
-from transformers import AutoTokenizer, AutoConfig
+from tokenizers import pre_tokenizers
+from transformers import AutoConfig, AutoTokenizer
 from transformers.models.auto.modeling_auto import (
     MODEL_FOR_CAUSAL_LM_MAPPING,
     MODEL_FOR_SEQ_TO_SEQ_CAUSAL_LM_MAPPING,
 )
-from tokenizers import pre_tokenizers
 
 MODEL_MAPPINGS = [MODEL_FOR_CAUSAL_LM_MAPPING, MODEL_FOR_SEQ_TO_SEQ_CAUSAL_LM_MAPPING]
 
-SPECIAL_TOKENS = {"context": "<|prompter|>", "response": "<|Assistant|>"}
+SPECIAL_TOKENS = {"context": "<|prompter|>", "response": "<|assistant|>"}
 
 
 def format_history(context, eos_token):
-
     conversation = [
         "{}{}{}".format(
             SPECIAL_TOKENS["context" if i % 2 == 0 else "response"],
@@ -24,7 +23,6 @@ def format_history(context, eos_token):
 
 
 def get_tokenizer(config):
-
     tokenizer = AutoTokenizer.from_pretrained(config.model, truncation_side="left")
 
     if hasattr(config, "per_digit_tokens") and config.per_digit_tokens:
@@ -47,7 +45,6 @@ def get_tokenizer(config):
 
 
 def get_model(name):
-
     model_config = AutoConfig.from_pretrained(name)
     for mapping in MODEL_MAPPINGS:
         model = mapping.get(type(model_config), None)

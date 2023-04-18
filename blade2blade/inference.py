@@ -1,7 +1,9 @@
-from transformers import AutoTokenizer
+from typing import Any, Dict
+
 import torch
-from typing import Dict, Any
-from transformers.pipelines import ConversationalPipeline, Conversation
+from transformers import AutoTokenizer
+from transformers.pipelines import Conversation, ConversationalPipeline
+
 from blade2blade.training.utils import get_model
 
 
@@ -23,17 +25,19 @@ class SafetyPipeline(ConversationalPipeline):
                 inputs.append("<|prompter|>" + text + self.tokenizer.eos_token)
             else:
                 # Generated responses should contain them already.
-                inputs.append("<|Assistant|>" + text + self.tokenizer.eos_token)
+                inputs.append("<|assistant|>" + text + self.tokenizer.eos_token)
 
-        input_ids, attn_mask = self.tokenizer(
-            "".join(inputs),
-            padding="max_length",
-            truncation=True,
-        ).values()
+        input_ids, attn_mask = (
+            self.tokenizer(
+                "".join(inputs),
+                padding="max_length",
+                truncation=True,
+                return_tensors="pt",
+            )
+            .to(self.device)
+            .values()
+        )
 
-        input_ids = torch.tensor([input_ids])
-        attn_mask = torch.tensor([attn_mask])
-        print(input_ids.shape)
         return {
             "input_ids": input_ids,
             "attention_mask": attn_mask,
@@ -52,19 +56,20 @@ class SafetyPipeline(ConversationalPipeline):
 
 class Blade2Blade:
     def __init__(self, model_name, **kwargs):
-
-        model = get_model(model_name)
-        tokenizer = AutoTokenizer.from_pretrained(model_name)
-        model.config.max_length = tokenizer.model_max_length
+        self.model = get_model(model_name)
+        self.model.eval()
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model.config.max_length = self.tokenizer.model_max_length
         self.device = (
             torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
         )
+        self.model.to(self.device)
+
         self.pipeline = SafetyPipeline(
-            model, tokenizer, self.device, minimum_tokens=0, **kwargs
+            self.model, self.tokenizer, self.device, minimum_tokens=0, **kwargs
         )
 
     def __call__(self, prompt: str, conversation=None):
-
         if not conversation:
             conversation = Conversation(prompt)
             resp = self.pipeline(conversation)
@@ -72,3 +77,17 @@ class Blade2Blade:
         conversation.add_user_input(prompt)
         resp = self.pipeline(conversation)
         return resp, conversation
+
+    def predict(self, prompt: str, **kwargs):
+        inputs = self.tokenizer(
+            prompt,
+            padding="max_length",
+            truncation=True,
+            return_tensors="pt",
+        ).to(self.device)
+
+        output = self.model.generate(**inputs, **kwargs).detach().cpu().numpy()[0]
+        output = self.tokenizer.convert_tokens_to_string(
+            self.tokenizer.convert_ids_to_tokens(output)
+        )
+        return output
