@@ -22,6 +22,7 @@ class BladeTrainer(Trainer):
         loss = outputs.get("loss")
         return (loss, outputs) if return_outputs else loss
 
+
 @hydra.main(version_base=None, config_path="config", config_name="config")
 def train(cfg: DictConfig) -> None:
     if not os.path.exists(cfg.log_dir):
